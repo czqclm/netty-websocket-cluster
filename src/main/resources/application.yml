@@ -1,0 +1,3 @@
+websocket:
+  port: 8081
+  path: /websocket/{userId}
