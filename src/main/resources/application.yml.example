@@ -1,0 +1,39 @@
+server:
+  port: 8081
+
+websocket:
+  port: 8082
+  path: /websocket/{userId}
+
+spring:
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: root
+    password: root
+    virtual-host: root
+    # 确认消息已发送到交换机(Exchange)
+    publisher-confirms: true
+    # 确认消息已发送到队列(Queue)
+    publisher-returns: true
+    # 监听器
+    listener:
+      simple:
+        # 应答模式 手动
+        acknowledge-mode: manual
+        # 最小消费
+        concurrency: 1
+        # 最大消费
+        max-concurrency: 10
+        # 重试
+        retry:
+          enabled: true
+
+  redis:
+    database: 1
+    host: localhost
+    port: 6379
+    password: root
+    jedis:
+      pool:
+        max-active: 200

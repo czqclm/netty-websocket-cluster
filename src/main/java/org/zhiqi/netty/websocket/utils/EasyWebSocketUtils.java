@@ -6,7 +6,7 @@ import org.zhiqi.netty.websocket.server.WebSocketServer;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * 调用 websocket 服务
+ * 调用 websocket 工具
  *
  * @author zhiqi
  * @version 1.0
