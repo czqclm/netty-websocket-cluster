@@ -26,7 +26,7 @@ public class WebSocketServer {
     public void handshake(Session session, @PathVariable String userId){
         this.session = session;
         this.userId = userId;
-        EasyWebSocketUtils.pushServer(userId, this);
+        EasyWebSocketUtils.pushUser(userId, this);
     }
 
 
@@ -39,11 +39,13 @@ public class WebSocketServer {
     @OnClose
     public void onClose(Session session) {
         log.info("\n========== websocket closed ==========\nuserId: {}\n",userId);
+        EasyWebSocketUtils.popUser(userId);
     }
 
     @OnError
     public void onError(Session session, Throwable throwable) {
         log.info("\n========== websocket error ==========\nuserId: {}\n",userId);
+        EasyWebSocketUtils.popUser(userId);
     }
 
     @OnMessage

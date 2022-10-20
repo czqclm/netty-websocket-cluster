@@ -5,6 +5,7 @@ import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.stereotype.Component;
+import org.zhiqi.netty.websocket.constants.WebSocketConstant;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -16,11 +17,6 @@ import javax.annotation.Resource;
 @Component
 public class AutoRabbitAutomatic {
 
-    /**
-     * 默认的 webSocketExchange
-     */
-    private final static String DEFAULT_EXCHANGE = "web_socket_exchange";
-
     @Resource
     private RabbitAdmin rabbitAdmin;
 
@@ -31,7 +27,7 @@ public class AutoRabbitAutomatic {
     private void createCurrentNodeQueueToRabbit() {
         Queue currentNodeQueue = new Queue(currentNodeQueueName, true, false, true);
         rabbitAdmin.declareQueue(currentNodeQueue);
-        FanoutExchange fanoutExchange = new FanoutExchange(DEFAULT_EXCHANGE, true, false);
+        FanoutExchange fanoutExchange = new FanoutExchange(WebSocketConstant.DEFAULT_EXCHANGE, true, false);
         rabbitAdmin.declareExchange(fanoutExchange);
         rabbitAdmin.declareBinding(BindingBuilder.bind(currentNodeQueue).to(fanoutExchange));
     }

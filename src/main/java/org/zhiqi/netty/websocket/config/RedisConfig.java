@@ -11,9 +11,17 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.zhiqi.netty.websocket.constants.WebSocketConstant;
+import org.zhiqi.netty.websocket.utils.EasyRedisUtils;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import javax.annotation.Resource;
+import java.util.UUID;
 
 /**
  * redis 配置文件
+ *
  * @author zhiqi
  * @version 1.0
  */

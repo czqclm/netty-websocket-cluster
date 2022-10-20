@@ -50,14 +50,4 @@ public class MyRabbitConfig {
         });
         return rabbitTemplate;
     }
-
-    /**
-     * 生成一个唯一的节点 id
-     *
-     * @return String
-     */
-    @Bean
-    public String currentNodeQueueName() {
-        return "websocket_node_" + UUID.randomUUID().toString().replace("-", "").toLowerCase();
-    }
 }

@@ -5,6 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * websocket 服务
@@ -13,6 +14,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
  * @version 1.0
  */
 @SpringBootApplication
+@EnableScheduling
 public class WebSocketApplication extends SpringBootServletInitializer {
 
     @Override

@@ -6,6 +6,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -21,6 +22,49 @@ import java.util.concurrent.TimeUnit;
 public class EasyRedisUtils {
 
     private StringRedisTemplate stringRedisTemplate;
+
+    public static final String DELIMITER = ":";
+
+    public static final String WILDCARD = "*";
+
+
+    public <T> T oGet(String key, Class<T> clazz) {
+        return stringToBean(stringRedisTemplate.opsForValue().get(key), clazz);
+    }
+
+    public <T> void oSet(String key, @NonNull T value) {
+        stringRedisTemplate.opsForValue().set(key, beanToString(value));
+    }
+
+    public <T> void oSet(String key, @NonNull T value, Long timeout, TimeUnit timeUnit) {
+        stringRedisTemplate.opsForValue().set(key, beanToString(value), timeout, timeUnit);
+    }
+
+    /**
+     * 根据前缀获取所有的键
+     *
+     * @param prefixKey 前缀
+     * @param clazz     类型
+     * @param <T>       泛型
+     * @return Map<String, T>
+     */
+    public <T> Map<String, T> oGetMap(String prefixKey, Class<T> clazz) {
+        if (StringUtils.isEmpty(prefixKey)) {
+            return null;
+        }
+        if (!prefixKey.contains(WILDCARD)) {
+            prefixKey = prefixKey.endsWith(DELIMITER) ? prefixKey + WILDCARD : prefixKey + DELIMITER + WILDCARD;
+        }
+        Set<String> keySet = stringRedisTemplate.keys(prefixKey);
+        if (CollectionUtils.isEmpty(keySet)) {
+            return null;
+        }
+        Map<String, T> map = new HashMap<>();
+        for (String key : keySet) {
+            map.put(key, oGet(key, clazz));
+        }
+        return map;
+    }
 
     public <T> Set<T> sGet(String key, Class<T> clazz) {
         Set<String> range = stringRedisTemplate.opsForSet().members(key);
@@ -59,11 +103,16 @@ public class EasyRedisUtils {
         return stringToBean(stringRedisTemplate.opsForHash().get(key, objectKey), clazz);
     }
 
-    public void mPush(String key, @NonNull Map<String, Object> map) {
+    public <T> void mPush(String key, @NonNull Map<String, T> map) {
+        Map<String, String> resultMap = new HashMap<>();
         map.forEach((k, v) -> {
-           map.put(k, beanToString(v));
+            resultMap.put(k, beanToString(v));
         });
-        stringRedisTemplate.opsForHash().putAll(key, map);
+        stringRedisTemplate.opsForHash().putAll(key, resultMap);
+    }
+
+    public <T> void mPush(String key, @NonNull String objectKey, @NonNull T value) {
+        stringRedisTemplate.opsForHash().put(key, objectKey, beanToString(value));
     }
 
     public void mRemoveObject(String key, String objectKey) {
