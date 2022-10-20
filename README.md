@@ -4,4 +4,7 @@
 netty  
 websocket  
 rabbitMq  
-redis  
+redis
+
+todo
+1. 加入注册中心
